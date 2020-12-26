@@ -97,12 +97,22 @@ void MainWindow::on_parseButton_clicked()
 
 void MainWindow::on_actionNew_triggered()
 {
-    ui->errorLabel->setHidden(true);
-    ui->tokensListEdit->clear();
-    scene->clear();
+    int answer = QMessageBox::warning(this,"Start New Parser", "Are you sure you want to start a new parser?", QMessageBox::Yes | QMessageBox::Cancel);
+    if(answer == QMessageBox::Yes)
+    {
+        ui->errorLabel->setHidden(true);
+        ui->tokensListEdit->clear();
+        scene->clear();
+    }
+
 }
 
 void MainWindow::on_actionExit_triggered()
 {
-    QApplication::quit();
+    int answer = QMessageBox::warning(this,"Quit Application", "Are you sure you want to quit?", QMessageBox::Yes | QMessageBox::Cancel);
+    if(answer == QMessageBox::Yes)
+    {
+        QApplication::quit();
+    }
+
 }

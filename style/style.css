@@ -1,12 +1,14 @@
-QPushButton {
+QPushButton#parseButton,
+QPushButton#loadButton{
     height: 40px;
     border: 2px solid #e67e22;
-    color: #180c03;
+    color: #e67e22;
     border-radius: 10px;
     font-size: 16px;
 }
 
-QPushButton:hover {
+QPushButton#parseButton:hover,
+QPushButton#loadButton:hover{
     background-color: #e67e22;
     color: white;
 }
@@ -35,4 +37,15 @@ QPlainTextEdit {
 
 QMenuBar {
     background-color: #f9e0ca;
+    font-size: 18px;
+    color: grey;
 }
+
+QMenu {
+    color: grey;
+    font-size: 16px;
+}
+
+
+
+

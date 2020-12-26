@@ -11,6 +11,7 @@
 #include "rectangle.h"
 #include "ellipse.h"
 #include <unordered_map>
+#include <QMessageBox>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }

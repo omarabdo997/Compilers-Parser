@@ -5,5 +5,6 @@
     <qresource prefix="/icons">
         <file>icons/new-file-icon.png</file>
         <file>icons/exit.ico</file>
+        <file>icons/coding-1961531-1659721.png</file>
     </qresource>
 </RCC>
