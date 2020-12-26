@@ -1,0 +1,38 @@
+QPushButton {
+    height: 40px;
+    border: 2px solid #e67e22;
+    color: #180c03;
+    border-radius: 10px;
+    font-size: 16px;
+}
+
+QPushButton:hover {
+    background-color: #e67e22;
+    color: white;
+}
+
+QLabel#tokensListLabel{
+    color: #e67e22;
+    font-size: 25px;
+}
+QLabel#syntaxTreeLabel{
+    color: #e67e22;
+    font-size: 25px;
+}
+
+QLabel#errorLabel{
+    color: #c0392b;
+    font-size: 20px;
+}
+
+QWidget#centralwidget {
+    background-color: #f9e0ca;
+}
+
+QPlainTextEdit {
+    font-size: 14px;
+}
+
+QMenuBar {
+    background-color: #f9e0ca;
+}
