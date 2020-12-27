@@ -12,6 +12,8 @@
 #include "ellipse.h"
 #include <unordered_map>
 #include <QMessageBox>
+#include "token.h"
+#include <QVector>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -45,10 +47,23 @@ private slots:
 
     void on_actionExit_triggered();
 
+    void on_codeListRadioButton_clicked();
+
+    void on_tokensListRadioButton_clicked();
+
+    void on_loadCodeButton_clicked();
+
+    void on_tokensListEdit_textChanged();
+
+    void on_scanButton_clicked();
+
 private:
     Ui::MainWindow *ui;
     QString styleSheet(QString path);
     QGraphicsScene* scene;
+    QString fileDir = "";
+    QString scannerData = "";
+    QString parseData = "";
     template<class Shape>
     void makeLine(Shape *a, Shape *b)
     {

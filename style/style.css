@@ -1,5 +1,7 @@
 QPushButton#parseButton,
-QPushButton#loadButton{
+QPushButton#loadButton,
+QPushButton#scanButton,
+QPushButton#loadCodeButton{
     height: 40px;
     border: 2px solid #e67e22;
     color: #e67e22;
@@ -8,7 +10,9 @@ QPushButton#loadButton{
 }
 
 QPushButton#parseButton:hover,
-QPushButton#loadButton:hover{
+QPushButton#loadButton:hover,
+QPushButton#scanButton:hover,
+QPushButton#loadCodeButton:hover{
     background-color: #e67e22;
     color: white;
 }
@@ -60,5 +64,9 @@ QGraphicsView {
     border-radius: 10px;
 }
 
-
+QRadioButton {
+    color: #e67e22;
+    font-size: 16px;
+    font-style: italic;
+}
 

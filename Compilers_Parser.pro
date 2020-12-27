@@ -19,12 +19,14 @@ SOURCES += \
     ellipse.cpp \
     main.cpp \
     mainwindow.cpp \
-    rectangle.cpp
+    rectangle.cpp \
+    token.cpp
 
 HEADERS += \
     ellipse.h \
     mainwindow.h \
-    rectangle.h
+    rectangle.h \
+    token.h
 
 FORMS += \
     mainwindow.ui

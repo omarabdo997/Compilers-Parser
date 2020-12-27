@@ -11,6 +11,9 @@ MainWindow::MainWindow(QWidget *parent)
     scene = new QGraphicsScene(this);
     ui->graphicsView->setScene(scene);
     ui->errorLabel->setHidden(true);
+    ui->scanButton->hide();
+    ui->loadCodeButton->hide();
+    ui->tokensListRadioButton->setChecked(true);
 }
 
 MainWindow::~MainWindow()
@@ -32,10 +35,11 @@ QString MainWindow::styleSheet(QString path)
 void MainWindow::on_loadButton_clicked()
 {
     QString fileName = QFileDialog::getOpenFileName(this,
-          tr("Open Text File"), "/home/omar", tr("Text files (*.txt)"));
+          tr("Open Text File"), fileDir, tr("Text files (*.txt)"));
     if(fileName != ""){
        QFile file(fileName);
        QFileInfo info = file;
+       fileDir = info.dir().path();
        if(info.suffix() != "txt"){
            ui->errorLabel->setText("You must select a txt file!");
            ui->errorLabel->setHidden(false);
@@ -47,17 +51,46 @@ void MainWindow::on_loadButton_clicked()
            return;
        }
        QTextStream out(&file);
-       ui->tokensListEdit->setPlainText(out.readAll());
+       QString content = out.readAll();
+       if(content == ""){
+           ui->errorLabel->setText("File is empty!");
+           ui->errorLabel->setHidden(false);
+           return;
+       }
+       parseData = content;
+       ui->tokensListEdit->setPlainText(content);
        ui->errorLabel->setHidden(true);
        return;
     }
-    ui->errorLabel->setText("No file is selected!");
+    ui->errorLabel->setText("No file was selected!");
     ui->errorLabel->setHidden(false);
     return;
 }
 
 void MainWindow::on_parseButton_clicked()
 {
+    if(parseData == ""){
+        QMessageBox::critical(this,"No data!","No data to parse!");
+        return;
+    }
+    QVector<Token> tokens;
+    QTextStream s(&parseData);
+    while(!s.atEnd()){
+        QString line = s.readLine().replace(" ", "");
+        if(line =="") {
+            continue;
+        }
+        QStringList l = line.split(",");
+        if(l.size() != 2) {
+            QMessageBox::critical(this,"Parse Error", "Please make sure to follow this formate (token, token type) in each line!");
+            return;
+        }
+        tokens.push_back(Token(l[0], l[1]));
+
+    }
+    for(auto i:tokens) {
+        qDebug()<<i.getValue()<<" "<<i.getType();
+    }
     scene->clear();
     node* root = new node{nullptr, nullptr, nullptr, "read", "(x)"};
     node* node1 = new node{nullptr, nullptr, nullptr, "if"};
@@ -115,4 +148,77 @@ void MainWindow::on_actionExit_triggered()
         QApplication::quit();
     }
 
+}
+
+void MainWindow::on_codeListRadioButton_clicked()
+{
+    ui->tokensListEdit->setPlainText(scannerData);
+    ui->tokensListLabel->setText("Code");
+    ui->scanButton->setHidden(false);
+    ui->loadCodeButton->setHidden(false);
+    ui->loadButton->hide();
+    ui->parseButton->hide();
+}
+
+void MainWindow::on_tokensListRadioButton_clicked()
+{
+    ui->tokensListEdit->setPlainText(parseData);
+    ui->tokensListLabel->setText("Tokens List");
+    ui->loadButton->setHidden(false);
+    ui->parseButton->setHidden(false);
+    ui->scanButton->hide();
+    ui->loadCodeButton->hide();
+}
+
+void MainWindow::on_loadCodeButton_clicked()
+{
+    QString fileName = QFileDialog::getOpenFileName(this,
+          tr("Open Text File"), fileDir, tr("Text files (*.txt)"));
+    if(fileName != ""){
+       QFile file(fileName);
+       QFileInfo info = file;
+       fileDir = info.dir().path();
+       if(info.suffix() != "txt"){
+           ui->errorLabel->setText("You must select a txt file!");
+           ui->errorLabel->setHidden(false);
+           return;
+       }
+       if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+           ui->errorLabel->setText("An error occured could not open file!");
+           ui->errorLabel->setHidden(false);
+           return;
+       }
+       QTextStream out(&file);
+       QString content = out.readAll();
+       if(content == ""){
+           ui->errorLabel->setText("File is empty!");
+           ui->errorLabel->setHidden(false);
+           return;
+       }
+       scannerData = content;
+       ui->tokensListEdit->setPlainText(content);
+       ui->errorLabel->setHidden(true);
+       return;
+    }
+    ui->errorLabel->setText("No file was selected!");
+    ui->errorLabel->setHidden(false);
+    return;
+}
+
+void MainWindow::on_tokensListEdit_textChanged()
+{
+    if(ui->tokensListRadioButton->isChecked()) {
+        parseData = ui->tokensListEdit->toPlainText();
+    }
+    if(ui->codeListRadioButton->isChecked()) {
+        scannerData = ui->tokensListEdit->toPlainText();
+    }
+}
+
+void MainWindow::on_scanButton_clicked()
+{
+    if(scannerData == ""){
+        QMessageBox::critical(this,"No data!","No data to scan!");
+        return;
+    }
 }
