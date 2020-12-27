@@ -20,13 +20,15 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     rectangle.cpp \
-    token.cpp
+    token.cpp \
+    parser.cpp
 
 HEADERS += \
     ellipse.h \
     mainwindow.h \
     rectangle.h \
-    token.h
+    token.h \
+    parser.cpp
 
 FORMS += \
     mainwindow.ui
