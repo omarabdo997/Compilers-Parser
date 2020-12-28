@@ -61,9 +61,12 @@ private:
     Ui::MainWindow *ui;
     QString styleSheet(QString path);
     QGraphicsScene* scene;
-    QString fileDir = "";
+    QString fileDir = ".";
     QString scannerData = "";
     QString parseData = "";
+    void loadFile(QString& data);
+
+
     template<class Shape>
     void makeLine(Shape *a, Shape *b)
     {
@@ -76,6 +79,7 @@ private:
         }
         scene->addLine(a->getXCord()+50, a->getYCord()+60, b->getXCord()+50, b->getYCord(), outlinePen);
     }
+
     template<class Shape1, class Shape2>
     void makeLine(Shape1 *a, Shape2 *b)
     {
@@ -87,6 +91,7 @@ private:
         }
         scene->addLine(a->getXCord()+50, a->getYCord()+60, b->getXCord()+50, b->getYCord(), outlinePen);
     }
+
     template <class Node>
     void draw(Node* root, unordered_map<int, int>&m, int level = 0, Rectangle* parentR=nullptr, Ellipse* parentC=nullptr) {
         Rectangle* r = nullptr;
