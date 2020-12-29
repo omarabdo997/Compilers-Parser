@@ -26,9 +26,11 @@ using namespace std;
 struct node{
     node* left;
     node* right;
+
     node* next;
     QString type;
-    QString name;
+    QString value;
+    node* elsePart;
 };
 
 
@@ -103,8 +105,8 @@ private:
         if(root == nullptr) {
             return;
         }
-        if(root->type == "if" or root->type == "read" or root->type == "write" or root->type == "repeat" or root->type == "assign") {
-            r = new Rectangle(m[level],level*120,root->type, root->name);
+        if(root->type == "if" or root->type == "read" or root->type == "write" or root->type == "repeat" or root->type == "assign" or root->type == "else") {
+            r = new Rectangle(m[level],level*120,root->type, root->value);
             scene->addItem(r);
             if(parentR!=nullptr) {
                 makeLine(parentR, r);
@@ -114,7 +116,7 @@ private:
             }
         }
         else {
-            c = new Ellipse(m[level],level*120,root->type, root->name);
+            c = new Ellipse(m[level],level*120,root->type, root->value);
             scene->addItem(c);
             if(parentR!=nullptr) {
                 makeLine(parentR, c);
@@ -127,6 +129,7 @@ private:
         m[level]+=200;
         draw(root->left, m, level+1, r, c);
         draw(root->right, m, level+1, r, c);
+        draw(root->elsePart, m, level+1, r, c);
         draw(root->next, m, level, r, c);
 
     }

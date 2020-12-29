@@ -150,6 +150,8 @@ void MainWindow::on_parseButton_clicked()
     equalOp->left = new node{nullptr, nullptr, nullptr, "id", "(x)"};
     equalOp->right = new node{nullptr, nullptr, nullptr, "const", "(0)"};
     repeat->right = equalOp;
+    node* test = new node{nullptr, nullptr, nullptr, "else", "(else-part)"};
+    node1->elsePart = test;
     unordered_map<int, int>m;
 
     draw(root, m);
