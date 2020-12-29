@@ -14,6 +14,8 @@
 #include <QMessageBox>
 #include "token.h"
 #include <QVector>
+#include <vector>
+#include "scanner.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -24,9 +26,11 @@ using namespace std;
 struct node{
     node* left;
     node* right;
+
     node* next;
     QString type;
-    QString name;
+    QString value;
+    node* elsePart;
 };
 
 
@@ -61,9 +65,14 @@ private:
     Ui::MainWindow *ui;
     QString styleSheet(QString path);
     QGraphicsScene* scene;
-    QString fileDir = "";
+    QString fileDir = ".";
+    QString codePath;
     QString scannerData = "";
     QString parseData = "";
+    void loadFile(QString& data);
+    void writeScannedData(QFile &file);
+
+
     template<class Shape>
     void makeLine(Shape *a, Shape *b)
     {
@@ -76,6 +85,7 @@ private:
         }
         scene->addLine(a->getXCord()+50, a->getYCord()+60, b->getXCord()+50, b->getYCord(), outlinePen);
     }
+
     template<class Shape1, class Shape2>
     void makeLine(Shape1 *a, Shape2 *b)
     {
@@ -87,6 +97,7 @@ private:
         }
         scene->addLine(a->getXCord()+50, a->getYCord()+60, b->getXCord()+50, b->getYCord(), outlinePen);
     }
+
     template <class Node>
     void draw(Node* root, unordered_map<int, int>&m, int level = 0, Rectangle* parentR=nullptr, Ellipse* parentC=nullptr) {
         Rectangle* r = nullptr;
@@ -94,8 +105,8 @@ private:
         if(root == nullptr) {
             return;
         }
-        if(root->type == "if" or root->type == "read" or root->type == "write" or root->type == "repeat" or root->type == "assign") {
-            r = new Rectangle(m[level],level*120,root->type, root->name);
+        if(root->type == "if" or root->type == "read" or root->type == "write" or root->type == "repeat" or root->type == "assign" or root->type == "else") {
+            r = new Rectangle(m[level],level*120,root->type, root->value);
             scene->addItem(r);
             if(parentR!=nullptr) {
                 makeLine(parentR, r);
@@ -105,7 +116,7 @@ private:
             }
         }
         else {
-            c = new Ellipse(m[level],level*120,root->type, root->name);
+            c = new Ellipse(m[level],level*120,root->type, root->value);
             scene->addItem(c);
             if(parentR!=nullptr) {
                 makeLine(parentR, c);
@@ -118,6 +129,7 @@ private:
         m[level]+=200;
         draw(root->left, m, level+1, r, c);
         draw(root->right, m, level+1, r, c);
+        draw(root->elsePart, m, level+1, r, c);
         draw(root->next, m, level, r, c);
 
     }

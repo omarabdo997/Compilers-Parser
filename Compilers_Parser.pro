@@ -22,6 +22,8 @@ SOURCES += \
     rectangle.cpp \
     token.cpp \
     parser.cpp
+    scanner.cpp \
+
 
 HEADERS += \
     ellipse.h \
@@ -29,6 +31,8 @@ HEADERS += \
     rectangle.h \
     token.h \
     parser.cpp
+    scanner.h \
+
 
 FORMS += \
     mainwindow.ui
