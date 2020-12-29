@@ -14,6 +14,8 @@
 #include <QMessageBox>
 #include "token.h"
 #include <QVector>
+#include <vector>
+#include "scanner.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -62,9 +64,11 @@ private:
     QString styleSheet(QString path);
     QGraphicsScene* scene;
     QString fileDir = ".";
+    QString codePath;
     QString scannerData = "";
     QString parseData = "";
     void loadFile(QString& data);
+    void writeScannedData(QFile &file);
 
 
     template<class Shape>

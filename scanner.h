@@ -4,6 +4,8 @@
 #include<string>
 #include<vector>
 #include<fstream>
+#include <QDebug>
+#include <QString>
 using namespace std;
 
 struct Token_And_Type{
@@ -24,14 +26,19 @@ class scanner
 
 public:
     virtual ~scanner();
-    scanner(string);
+    scanner();
     vector<string> read_code_file();
-    void Scan_Process();
+    void Scan_Process(vector<string> s);
     void print_Token_TYPE();
+    vector<Token_And_Type> get_Tokens();
+    void Write_in_file();
+    string process_line(string );
 
+
+    vector<Token_And_Type> getToken_Type() const;
 
 private:
-    string process_line(string );
+
     void organize_Tokens();
     vector< vector<string> >processing_file();
     string capitalize(string);

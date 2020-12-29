@@ -20,12 +20,14 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     rectangle.cpp \
+    scanner.cpp \
     token.cpp
 
 HEADERS += \
     ellipse.h \
     mainwindow.h \
     rectangle.h \
+    scanner.h \
     token.h
 
 FORMS += \

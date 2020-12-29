@@ -1,8 +1,7 @@
 #include "scanner.h"
 
-scanner::scanner(string File_Name)
+scanner::scanner()
 {
-    scanner::file_name = File_Name;
 }
 
 vector<string> scanner::read_code_file()
@@ -129,7 +128,6 @@ vector<vector<string> >scanner::processing_file()
 }
 void scanner::scan_output()
 {
-    out_code.open("output.text");
 
     for(int i=0; i<processed_code.size(); i++)
     {
@@ -143,22 +141,17 @@ void scanner::scan_output()
             if(is_Reserved_keyword(process[j]))
             {
                 token.type=capitalize(process[j]);
-                out_code<<process[j]<<","<<capitalize(process[j])<<"\n";
             }
             else if(is_special_character(process[j]))
             {
-                out_code<<process[j]<<","<<scanner::map_special_character(process[j])<<"\n";
                 token.type=map_special_character(process[j]);
-
             }
             else if(isNumber(process[j]))
             {
-                out_code<<process[j]<<","<<"Number"<<"\n";
                 token.type="NUMBER";
             }
             else
             {
-                out_code<<process[j]<<","<<"IDENTIFIER"<<"\n";
                 token.type="IDENTIFIER";
             }
             Token_Type.push_back(token);
@@ -189,6 +182,11 @@ bool scanner::is_Reserved_keyword(string symbol)
     }
     return false;
 }
+
+vector<Token_And_Type> scanner::getToken_Type() const
+{
+    return Token_Type;
+}
 string scanner::capitalize(string s)
 {
     string t="";
@@ -197,6 +195,9 @@ string scanner::capitalize(string s)
         t+=(char)toupper(x);
     }
     return t;
+}
+vector<Token_And_Type> scanner::get_Tokens(){
+return scanner::Token_Type;
 }
 string scanner::map_special_character(string s)
 {
@@ -217,15 +218,18 @@ string scanner::map_special_character(string s)
     else if(s==")")return "CLOSEBRACKET";
 
 }
-void scanner::Scan_Process()
+void scanner::Scan_Process(vector<string> s)
 {
-    code = read_code_file();
-    if(file_found)
-    {
-        processed_code = processing_file();
-        scanner::scan_output();
-        scanner::print_Token_TYPE();
-    }
+    code = s;
+    processed_code = processing_file();
+    scanner::scan_output();
+    scanner::print_Token_TYPE();
+    scanner::Write_in_file();
+}
+void scanner::Write_in_file()
+{
+    out_code.open("Tokens.text");
+    for(int i=0;i<Token_Type.size();i++)out_code<<Token_Type[i].value<<","<<Token_Type[i].type<<"\n";
 }
 void scanner::print_Token_TYPE()
 {

@@ -40,28 +40,47 @@ void MainWindow::loadFile(QString &data)
        if(info.suffix() != "txt"){
            ui->errorLabel->setText("You must select a txt file!");
            ui->errorLabel->setHidden(false);
-           return;
+           return ;
        }
        if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
            ui->errorLabel->setText("An error occured could not open file!");
            ui->errorLabel->setHidden(false);
-           return;
+           return ;
        }
        QTextStream in(&file);
        QString content = in.readAll();
        if(content == ""){
            ui->errorLabel->setText("File is empty!");
            ui->errorLabel->setHidden(false);
-           return;
+           return ;
        }
        data = content;
        ui->tokensListEdit->setPlainText(content);
        ui->errorLabel->setHidden(true);
-       return;
+       return ;
     }
     ui->errorLabel->setText("No file was selected!");
     ui->errorLabel->setHidden(false);
-    return;
+    return ;
+}
+
+void MainWindow::writeScannedData(QFile &file)
+{
+    QTextStream stream(&scannerData);
+    vector<string> fileData;
+    scanner s;
+    while(!stream.atEnd()) {
+        QString line = stream.readLine();
+        fileData.push_back(s.process_line(line.toStdString()));
+    }
+
+    s.Scan_Process(fileData);
+    vector<Token_And_Type> tokenType = s.getToken_Type();
+    QTextStream out(&file);
+
+    for(auto i:tokenType) {
+        out << QString::fromUtf8(i.value.c_str())<<", "<<QString::fromUtf8(i.type.c_str())<<endl;
+    }
 }
 
 
@@ -221,8 +240,7 @@ void MainWindow::on_scanButton_clicked()
             QMessageBox::critical(this,"Failed to save", "Failed to save the file please try again!");
             return;
         }
-        QTextStream out(&file);
-        out << scannerData;
+        writeScannedData(file);
         QMessageBox::information(this,"Saved Successfully", "File was saved successfully!");
         return;
         }
