@@ -9,7 +9,8 @@ void Parser::parse()
 {
     counter = 0;
     has_error = false;
-    Parser::root = stmt_seq();
+    root = nullptr;
+    root = stmt_seq();
 }
 
 
@@ -72,15 +73,11 @@ Parser::Node* Parser:: factor(void)
     if(tokens[counter].getType() == "NUMBER")
     {
         temp = new Node("const", "(" + tokens[counter].getValue()+ ")");
-        temp->left = nullptr;
-        temp->right = nullptr;
         match(tokens[counter].getType());
     }
     else if(tokens[counter].getType() == "IDENTIFIER")
     {
         temp = new Node("id","("+ tokens[counter].getValue() + ")");
-        temp->left = nullptr;
-        temp->right = nullptr;
         match(tokens[counter].getType());
     }
     else if(tokens[counter].getValue() == "(")
@@ -110,6 +107,8 @@ Parser::Node* Parser:: simpleExp(void)
     }
    return temp;
 }
+
+
 //assign-stmt -> identifier := exp
 Parser::Node* Parser::Assign_stmt()
 {
@@ -117,45 +116,47 @@ Parser::Node* Parser::Assign_stmt()
   match("IDENTIFIER");
   QString op_type = tokens[counter].getType();
   match("ASSIGN");
-  Node* temp = new Node(op_type,"("+value+")");
-  temp->left=Parser::exp();
-  temp->right=nullptr;
+  Node* temp = new Node(op_type.toLower(),"("+value+")");
+  temp->left= exp();
   return temp;
 }
-//repeat-stmt -> repeat
+
+
+//repeat-stmt -> repeat stmt-sequence until exp
 Parser::Node* Parser::Repeat_stmt()
 {
-  QString type = tokens[counter].getType();
+  QString value = tokens[counter].getValue();
   match("REPEAT");
-  Node* temp = new Node(type,"");
-  temp->left=Parser::stmt_seq();
+  Node* temp = new Node(value,"");
+  temp->left=stmt_seq();
   match("UNTIL");
-  temp->right=Parser::exp();
+  temp->right= exp();
   return temp;
 }
+
+
 //read-stmt -> read identifier
 Parser::Node* Parser::Read_stmt()
 {
- QString type = tokens[counter].getType();
+ QString value = tokens[counter].getValue();
  match("READ");
  QString id = tokens[counter].getValue();
  match("IDENTIFIER");
- Node* temp = new Node(type,"("+id+")");
- temp->left=nullptr;
- temp->right=nullptr;
+ Node* temp = new Node(value,"("+id+")");
  return temp;
 }
+
+
 //Write_stmt-> write exp
 Parser::Node* Parser::Write_stmt()
 {
   QString value = tokens[counter].getValue();
   match("WRITE");
   Node* temp = new Node(value,"");
-  temp->left = new Node("id","("+tokens[counter].getValue()+")");
+  temp->left = exp();
   temp->right = nullptr;
   return temp;
 }
-
 
 
 //exp -> simple-exp  [comparison-op  simple-exp]
@@ -172,22 +173,26 @@ Parser::Node* Parser::exp(){
     return temp;
 }
 
+
 //if-stmt -> if exp then stmt-sequence [else stmt-sequence] end
 Parser::Node* Parser::if_stmt()
 {
     match("IF");
-    Node* temp = new Node("IF","");
-    temp->left = Parser::exp();
+    Node* temp = new Node("if","");
+    temp->left = exp();
     match("THEN");
-    temp->right = Parser::stmt_seq();
+    temp->right = stmt_seq();
     if(tokens[counter].getType()=="ELSE")
     {
        match(tokens[counter].getType());
        temp->elsePart = stmt_seq();
     }
     match("END");
-   return temp;
+    return temp;
 }
+
+
+//statement -> if stmt | repeat stmt | assign stmt | read stmt | write stmt
 Parser::Node* Parser::statement()
 {
     if(tokens[counter].getType() == "IF"){
@@ -203,23 +208,35 @@ Parser::Node* Parser::statement()
     }
      else return nullptr;
 }
+
+
 // stmt-sequence -> statement {;statement}
 Parser::Node* Parser::stmt_seq()
 {
      Node* temp = nullptr;
-       temp = statement();
-        while(tokens[counter].getType()=="SEMICOLON")
+     temp = statement();
+     while(tokens[counter].getType()=="SEMICOLON" && counter < tokens.size())
+     {
+        match(tokens[counter].getType());
+        if(counter == tokens.size())
         {
-           match(tokens[counter].getType());
-           temp = statement();
-           if(Parser::has_error)
-           {
+               return temp;
+        }
+        temp->next = statement();
+        if(counter == tokens.size())
+        {
+               return temp;
+        }
+        if(Parser::has_error)
+        {
                return nullptr;
-           }
-         }
+        }
+     }
 
- return temp;
+     return temp;
 }
+
+
 Parser::Node::Node(QString tokenType, QString tokenValue)
 {
     this->type = tokenType;
