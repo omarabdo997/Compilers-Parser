@@ -9,7 +9,7 @@ void Parser::parse()
 {
     counter = 0;
     has_error = false;
-    Parser::root = *stmt_seq();
+    Parser::root = stmt_seq();
 }
 
 

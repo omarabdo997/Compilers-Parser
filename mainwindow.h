@@ -16,6 +16,7 @@
 #include <QVector>
 #include <vector>
 #include "scanner.h"
+#include "parser.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }

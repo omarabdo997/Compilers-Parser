@@ -119,7 +119,15 @@ void MainWindow::on_parseButton_clicked()
         qDebug()<<i.getValue()<<" "<<i.getType();
     }
     scene->clear();
-    node* root = new node{nullptr, nullptr, nullptr, "read", "(x)"};
+    Parser p(tokens);
+    p.parse();
+    if(p.has_error){
+        qDebug()<<"error";
+        return;
+    }
+    qDebug()<<p.root->value;
+    Parser::Node *node = p.root;
+    /*node* root = new node{nullptr, nullptr, nullptr, "read", "(x)"};
     node* node1 = new node{nullptr, nullptr, nullptr, "if"};
     root->next = node1;
     node* node2 = new node{nullptr, nullptr, nullptr, "op", "(<)"};
@@ -151,10 +159,10 @@ void MainWindow::on_parseButton_clicked()
     equalOp->right = new node{nullptr, nullptr, nullptr, "const", "(0)"};
     repeat->right = equalOp;
     node* test = new node{nullptr, nullptr, nullptr, "else", "(else-part)"};
-    node1->elsePart = test;
+    node1->elsePart = test;*/
     unordered_map<int, int>m;
 
-    draw(root, m);
+    draw(node, m);
 }
 
 void MainWindow::on_actionNew_triggered()

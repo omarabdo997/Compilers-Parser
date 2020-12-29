@@ -19,18 +19,20 @@ SOURCES += \
     ellipse.cpp \
     main.cpp \
     mainwindow.cpp \
+    parser.cpp \
     rectangle.cpp \
-    token.cpp \
-    parser.cpp
+    scanner.cpp \
+    token.cpp
     scanner.cpp \
 
 
 HEADERS += \
     ellipse.h \
     mainwindow.h \
+    parser.h \
     rectangle.h \
-    token.h \
-    parser.cpp
+    scanner.h \
+    token.h
     scanner.h \
 
 

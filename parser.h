@@ -20,7 +20,7 @@ public:
         QString type;
         QString value;
         Node(QString tokenType = "", QString tokenValue = "");
-    } root;
+    } *root;
 
     Parser(QVector<Token> tokens);
 
