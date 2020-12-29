@@ -16,6 +16,7 @@ public:
         Node* left;
         Node* right;
         Node* next;
+        Node* elsePart;
         QString type;
         QString value;
         Node(QString tokenType = "", QString tokenValue = "");
@@ -38,7 +39,13 @@ public:
     Node* factor(void);
     Node* exp(void);
     Node* simpleExp(void);
-
+    Node* Repeat_stmt(void);
+    Node* Assign_stmt(void);
+    Node* Read_stmt(void);
+    Node* Write_stmt(void);
+    Node* if_stmt(void);
+    Node* stmt_seq(void);
+    Node* statement(void);
 
 
 };
