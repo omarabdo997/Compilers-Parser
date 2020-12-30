@@ -71,7 +71,7 @@ void MainWindow::writeScannedData(QFile &file)
     vector<string> fileData;
     scanner s;
     while(!stream.atEnd()) {
-        QString line = stream.readLine();
+        QString line = stream.readLine().replace("\t", " ").replace(")", " )");
         fileData.push_back(s.process_line(line.toStdString()));
     }
 
