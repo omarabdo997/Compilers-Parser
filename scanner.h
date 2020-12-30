@@ -47,6 +47,7 @@ private:
     bool is_special_character(string);
     void scan_output();
     bool is_Reserved_keyword(string symbol);
+    void removeMinusIfNegative();
 private:
     string file_name;
     ofstream out_code;

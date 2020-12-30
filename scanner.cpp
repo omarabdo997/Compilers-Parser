@@ -183,6 +183,23 @@ bool scanner::is_Reserved_keyword(string symbol)
     return false;
 }
 
+void scanner::removeMinusIfNegative()
+{
+    for (int i=0;i<Token_Type.size(); i++) {
+        if (Token_Type[i].type == "MINUS"){
+            if(i !=0 and (Token_Type[i-1].type == "IDENTIFIER" or Token_Type[i-1].type == "NUMBER") ) {
+                continue;
+            }
+            else {
+                if(i+1 <Token_Type.size()) {
+                    Token_Type[i+1].value = Token_Type[i].value + Token_Type[i+1].value;
+                    Token_Type.erase(Token_Type.begin()+i);
+                }
+            }
+        }
+    }
+}
+
 vector<Token_And_Type> scanner::getToken_Type() const
 {
     return Token_Type;
@@ -223,6 +240,7 @@ void scanner::Scan_Process(vector<string> s)
     code = s;
     processed_code = processing_file();
     scanner::scan_output();
+    scanner::removeMinusIfNegative();
     scanner::print_Token_TYPE();
     scanner::Write_in_file();
 }
