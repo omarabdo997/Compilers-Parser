@@ -55,7 +55,7 @@ private:
     vector<vector<string> >processed_code;
     vector<Token_And_Type>Token_Type;
     vector<string> reserved_keywords = {"if","then","repeat","until","read","write","end","else"};
-    vector<string> special_chars= {"{","}",":=","*","+","-","<",">","<=",">=",";","=","(",")"};
+    vector<string> special_chars= {"{","}",":=","*","/","+","-","<",">","<=",">=",";","=","(",")"};
 };
 
 #endif // SCANNER_H
