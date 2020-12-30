@@ -12,6 +12,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->graphicsView->setScene(scene);
     ui->errorLabel->hide();
     ui->tokensListRadioButton->click();
+
 }
 
 MainWindow::~MainWindow()
@@ -96,7 +97,7 @@ void MainWindow::on_parseButton_clicked()
         QMessageBox::critical(this,"No data!","No data to parse!");
         return;
     }
-    QVector<Token> tokens;
+    vector<Token> tokens;
     QTextStream s(&parseData);
     while(!s.atEnd()){
         QString line = s.readLine().replace(" ", "");
@@ -120,11 +121,19 @@ void MainWindow::on_parseButton_clicked()
     }
     scene->clear();
     Parser p(tokens);
-    p.parse();
-    if(p.has_error){
-        qDebug()<<"error";
+    try {
+        p.parse();
+        if(p.has_error){
+            qDebug()<<"error";
+            QMessageBox::critical(this,"Parse Error", "An error has occured please check your syntax and try again!");
+            return;
+        }
+    } catch (exception &e) {
+        qDebug()<<e.what();
+        QMessageBox::critical(this,"Parse Error", "An error has occured please check your syntax and try again!");
         return;
     }
+
     qDebug()<<p.root->value;
     Parser::Node *node = p.root;
     /*node* root = new node{nullptr, nullptr, nullptr, "read", "(x)"};

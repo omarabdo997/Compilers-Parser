@@ -4,11 +4,13 @@
 #include <QVector>
 #include <QString>
 #include "token.h"
+#include <vector>
+using namespace std;
 
 class Parser
 {
 private:
-    QVector<Token> tokens;
+    vector<Token> tokens;
     int counter;
 
 public:
@@ -22,7 +24,7 @@ public:
         Node(QString tokenType = "", QString tokenValue = "");
     } *root;
 
-    Parser(QVector<Token> tokens);
+    Parser(vector<Token> tokens);
 
     void parse();
 

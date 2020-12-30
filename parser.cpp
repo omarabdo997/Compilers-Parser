@@ -1,6 +1,6 @@
 #include "parser.h"
 
-Parser::Parser(QVector<Token> tokens)
+Parser::Parser(vector<Token> tokens)
 {
     this->tokens = tokens;
 }
@@ -16,11 +16,11 @@ void Parser::parse()
 
 void Parser:: match(QString inputToken)
 {
-    if(inputToken == tokens[counter].getValue()) // if the input of the function is the value
+    if(inputToken == tokens.at(counter).getValue()) // if the input of the function is the value
     {
         counter++;
     }
-    else if(inputToken == tokens[counter].getType()) // if the input of the function is the type
+    else if(inputToken == tokens.at(counter).getType()) // if the input of the function is the type
     {
         counter++;
     }
@@ -56,9 +56,9 @@ Parser::Node* Parser:: term(void)
 {
     Node* temp = nullptr;
     temp = factor();
-    while(counter + 1 < tokens.size() && (tokens[counter].getValue() == "*" || tokens[counter].getValue() == "/"))
-    {  Node* newtemp = new Node("op", "(" + tokens[counter].getValue() + ")");
-       match(tokens[counter].getValue());
+    while(counter + 1 < tokens.size() && (tokens.at(counter).getValue() == "*" || tokens.at(counter).getValue() == "/"))
+    {  Node* newtemp = new Node("op", "(" + tokens.at(counter).getValue() + ")");
+       match(tokens.at(counter).getValue());
        newtemp->left = temp;
        newtemp->right = factor();
        temp = newtemp;
@@ -70,17 +70,17 @@ Parser::Node* Parser:: term(void)
 Parser::Node* Parser:: factor(void)
 {
     Node* temp = nullptr;
-    if(tokens[counter].getType() == "NUMBER")
+    if(tokens.at(counter).getType() == "NUMBER")
     {
-        temp = new Node("const", "(" + tokens[counter].getValue()+ ")");
-        match(tokens[counter].getType());
+        temp = new Node("const", "(" + tokens.at(counter).getValue()+ ")");
+        match(tokens.at(counter).getType());
     }
-    else if(tokens[counter].getType() == "IDENTIFIER")
+    else if(tokens.at(counter).getType() == "IDENTIFIER")
     {
-        temp = new Node("id","("+ tokens[counter].getValue() + ")");
-        match(tokens[counter].getType());
+        temp = new Node("id","("+ tokens.at(counter).getValue() + ")");
+        match(tokens.at(counter).getType());
     }
-    else if(tokens[counter].getValue() == "(")
+    else if(tokens.at(counter).getValue() == "(")
     {
         match("(");
         temp = exp();
@@ -97,10 +97,10 @@ Parser::Node* Parser:: factor(void)
 Parser::Node* Parser:: simpleExp(void)
 {
     Node* temp = term();
-    while(counter <tokens.size() && (tokens[counter].getValue() == "+" || tokens[counter].getValue() == "-"))
+    while(counter <tokens.size() && (tokens.at(counter).getValue() == "+" || tokens.at(counter).getValue() == "-"))
     {
-        Node* newtemp = new Node("op", "(" + tokens[counter].getValue() + ")");
-        match(tokens[counter].getValue());
+        Node* newtemp = new Node("op", "(" + tokens.at(counter).getValue() + ")");
+        match(tokens.at(counter).getValue());
         newtemp->left = temp;
         newtemp->right = term();
         temp = newtemp;
@@ -112,9 +112,9 @@ Parser::Node* Parser:: simpleExp(void)
 //assign-stmt -> identifier := exp
 Parser::Node* Parser::Assign_stmt()
 {
-  QString value = tokens[counter].getValue();
+  QString value = tokens.at(counter).getValue();
   match("IDENTIFIER");
-  QString op_type = tokens[counter].getType();
+  QString op_type = tokens.at(counter).getType();
   match("ASSIGN");
   Node* temp = new Node(op_type.toLower(),"("+value+")");
   temp->left= exp();
@@ -125,7 +125,7 @@ Parser::Node* Parser::Assign_stmt()
 //repeat-stmt -> repeat stmt-sequence until exp
 Parser::Node* Parser::Repeat_stmt()
 {
-  QString value = tokens[counter].getValue();
+  QString value = tokens.at(counter).getValue();
   match("REPEAT");
   Node* temp = new Node(value,"");
   temp->left=stmt_seq();
@@ -138,9 +138,9 @@ Parser::Node* Parser::Repeat_stmt()
 //read-stmt -> read identifier
 Parser::Node* Parser::Read_stmt()
 {
- QString value = tokens[counter].getValue();
+ QString value = tokens.at(counter).getValue();
  match("READ");
- QString id = tokens[counter].getValue();
+ QString id = tokens.at(counter).getValue();
  match("IDENTIFIER");
  Node* temp = new Node(value,"("+id+")");
  return temp;
@@ -150,7 +150,7 @@ Parser::Node* Parser::Read_stmt()
 //Write_stmt-> write exp
 Parser::Node* Parser::Write_stmt()
 {
-  QString value = tokens[counter].getValue();
+  QString value = tokens.at(counter).getValue();
   match("WRITE");
   Node* temp = new Node(value,"");
   temp->left = exp();
@@ -162,10 +162,10 @@ Parser::Node* Parser::Write_stmt()
 //exp -> simple-exp  [comparison-op  simple-exp]
 Parser::Node* Parser::exp(){
     Node* temp= simpleExp();
-    if(tokens[counter].getValue() == "<" || tokens[counter].getValue() == ">" || tokens[counter].getValue() == "=")
+    if(tokens.at(counter).getValue() == "<" || tokens.at(counter).getValue() == ">" || tokens.at(counter).getValue() == "=")
     {
-        Node* newtemp = new Node("op", "(" + tokens[counter].getValue() + ")");
-        match(tokens[counter].getValue());
+        Node* newtemp = new Node("op", "(" + tokens.at(counter).getValue() + ")");
+        match(tokens.at(counter).getValue());
         newtemp->left = temp;
         newtemp->right = simpleExp();
         temp = newtemp;
@@ -182,9 +182,9 @@ Parser::Node* Parser::if_stmt()
     temp->left = exp();
     match("THEN");
     temp->right = stmt_seq();
-    if(tokens[counter].getType()=="ELSE")
+    if(tokens.at(counter).getType()=="ELSE")
     {
-       match(tokens[counter].getType());
+       match(tokens.at(counter).getType());
        temp->elsePart = stmt_seq();
     }
     match("END");
@@ -195,15 +195,15 @@ Parser::Node* Parser::if_stmt()
 //statement -> if stmt | repeat stmt | assign stmt | read stmt | write stmt
 Parser::Node* Parser::statement()
 {
-    if(tokens[counter].getType() == "IF"){
+    if(tokens.at(counter).getType() == "IF"){
             return if_stmt();
-    }else if (tokens[counter].getType() == "REPEAT"){
+    }else if (tokens.at(counter).getType() == "REPEAT"){
             return Repeat_stmt();
-    }else if (tokens[counter].getType() == "READ"){
+    }else if (tokens.at(counter).getType() == "READ"){
             return Read_stmt();
-    }else if (tokens[counter].getType() == "WRITE"){
+    }else if (tokens.at(counter).getType() == "WRITE"){
             return Write_stmt();
-    }else if (tokens[counter].getType() == "IDENTIFIER"){
+    }else if (tokens.at(counter).getType() == "IDENTIFIER"){
              return Assign_stmt();
     }
      else return nullptr;
@@ -215,14 +215,19 @@ Parser::Node* Parser::stmt_seq()
 {
      Node* temp = nullptr;
      temp = statement();
-     while(tokens[counter].getType()=="SEMICOLON" && counter < tokens.size())
+     while(tokens.at(counter).getType()=="SEMICOLON" && counter < tokens.size())
      {
-        match(tokens[counter].getType());
+
+        match(tokens.at(counter).getType());
         if(counter == tokens.size())
         {
                return temp;
         }
-        temp->next = statement();
+        Node* next = temp;
+        while(next->next != nullptr) {
+            next = next->next;
+        }
+        next->next = statement();
         if(counter == tokens.size())
         {
                return temp;
