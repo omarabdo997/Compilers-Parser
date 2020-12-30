@@ -162,6 +162,9 @@ Parser::Node* Parser::Write_stmt()
 //exp -> simple-exp  [comparison-op  simple-exp]
 Parser::Node* Parser::exp(){
     Node* temp= simpleExp();
+    if(counter >= tokens.size()) {
+        return temp;
+    }
     if(tokens.at(counter).getValue() == "<" || tokens.at(counter).getValue() == ">" || tokens.at(counter).getValue() == "=")
     {
         Node* newtemp = new Node("op", "(" + tokens.at(counter).getValue() + ")");
@@ -215,7 +218,7 @@ Parser::Node* Parser::stmt_seq()
 {
      Node* temp = nullptr;
      temp = statement();
-     while(tokens.at(counter).getType()=="SEMICOLON" && counter < tokens.size())
+     while(counter < tokens.size() && tokens.at(counter).getType()=="SEMICOLON")
      {
 
         match(tokens.at(counter).getType());
