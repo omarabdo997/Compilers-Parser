@@ -4,6 +4,8 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 CONFIG += c++11
 
+RC_ICONS = coding_1961531_1659721_slp_icon.ico
+
 # The following define makes your compiler emit warnings if you use
 # any Qt feature that has been marked deprecated (the exact warnings
 # depend on your compiler). Please consult the documentation of the
@@ -19,16 +21,22 @@ SOURCES += \
     ellipse.cpp \
     main.cpp \
     mainwindow.cpp \
+    parser.cpp \
     rectangle.cpp \
     scanner.cpp \
     token.cpp
+    scanner.cpp \
+
 
 HEADERS += \
     ellipse.h \
     mainwindow.h \
+    parser.h \
     rectangle.h \
     scanner.h \
     token.h
+    scanner.h \
+
 
 FORMS += \
     mainwindow.ui

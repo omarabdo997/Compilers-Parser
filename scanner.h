@@ -47,6 +47,7 @@ private:
     bool is_special_character(string);
     void scan_output();
     bool is_Reserved_keyword(string symbol);
+    void removeMinusIfNegative();
 private:
     string file_name;
     ofstream out_code;
@@ -55,7 +56,7 @@ private:
     vector<vector<string> >processed_code;
     vector<Token_And_Type>Token_Type;
     vector<string> reserved_keywords = {"if","then","repeat","until","read","write","end","else"};
-    vector<string> special_chars= {"{","}",":=","*","+","-","<",">","<=",">=",";","=","(",")"};
+    vector<string> special_chars= {"{","}",":=","*","/","+","-","<",">","<=",">=",";","=","(",")"};
 };
 
 #endif // SCANNER_H

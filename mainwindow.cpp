@@ -12,6 +12,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->graphicsView->setScene(scene);
     ui->errorLabel->hide();
     ui->tokensListRadioButton->click();
+
 }
 
 MainWindow::~MainWindow()
@@ -70,8 +71,9 @@ void MainWindow::writeScannedData(QFile &file)
     vector<string> fileData;
     scanner s;
     while(!stream.atEnd()) {
-        QString line = stream.readLine();
-        fileData.push_back(s.process_line(line.toStdString()));
+        QString line = stream.readLine().replace("\t", " ").replace(")", " )");
+        if(line != "")
+            fileData.push_back(s.process_line(line.toStdString()));
     }
 
     s.Scan_Process(fileData);
@@ -96,7 +98,7 @@ void MainWindow::on_parseButton_clicked()
         QMessageBox::critical(this,"No data!","No data to parse!");
         return;
     }
-    QVector<Token> tokens;
+    vector<Token> tokens;
     QTextStream s(&parseData);
     while(!s.atEnd()){
         QString line = s.readLine().replace(" ", "");
@@ -119,7 +121,23 @@ void MainWindow::on_parseButton_clicked()
         qDebug()<<i.getValue()<<" "<<i.getType();
     }
     scene->clear();
-    node* root = new node{nullptr, nullptr, nullptr, "read", "(x)"};
+    Parser p(tokens);
+    try {
+        p.parse();
+        if(p.has_error){
+            qDebug()<<"error";
+            QMessageBox::critical(this,"Parse Error", "An error has occured please check your syntax and try again!");
+            return;
+        }
+    } catch (exception &e) {
+        qDebug()<<e.what();
+        QMessageBox::critical(this,"Parse Error", "An error has occured please check your syntax and try again!");
+        return;
+    }
+
+    qDebug()<<p.root->value;
+    Parser::Node *node = p.root;
+    /*node* root = new node{nullptr, nullptr, nullptr, "read", "(x)"};
     node* node1 = new node{nullptr, nullptr, nullptr, "if"};
     root->next = node1;
     node* node2 = new node{nullptr, nullptr, nullptr, "op", "(<)"};
@@ -151,10 +169,10 @@ void MainWindow::on_parseButton_clicked()
     equalOp->right = new node{nullptr, nullptr, nullptr, "const", "(0)"};
     repeat->right = equalOp;
     node* test = new node{nullptr, nullptr, nullptr, "else", "(else-part)"};
-    node1->elsePart = test;
+    node1->elsePart = test;*/
     unordered_map<int, int>m;
 
-    draw(root, m);
+    draw(node, m);
 }
 
 void MainWindow::on_actionNew_triggered()
