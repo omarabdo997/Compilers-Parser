@@ -11,6 +11,9 @@ void Parser::parse()
     has_error = false;
     root = nullptr;
     root = stmt_seq();
+    if (counter != tokens.size()){
+        has_error = true;
+    }
 }
 
 
