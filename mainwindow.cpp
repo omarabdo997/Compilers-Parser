@@ -72,7 +72,8 @@ void MainWindow::writeScannedData(QFile &file)
     scanner s;
     while(!stream.atEnd()) {
         QString line = stream.readLine().replace("\t", " ").replace(")", " )");
-        fileData.push_back(s.process_line(line.toStdString()));
+        if(line != "")
+            fileData.push_back(s.process_line(line.toStdString()));
     }
 
     s.Scan_Process(fileData);
