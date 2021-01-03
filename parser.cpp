@@ -188,15 +188,15 @@ Parser::Node* Parser::if_stmt()
     temp->left = exp();
     match("THEN");
     temp->right = stmt_seq();
-    if(tokens.at(counter - 1).getType()== "SEMICOLON")
-    {
-        has_error = true;
-        return nullptr;
-    }
     if(tokens.at(counter).getType()=="ELSE")
     {
        match(tokens.at(counter).getType());
        temp->elsePart = stmt_seq();
+    }
+    if(tokens.at(counter - 1).getType()== "SEMICOLON")
+    {
+        has_error = true;
+        return nullptr;
     }
     match("END");
     return temp;
