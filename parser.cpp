@@ -188,6 +188,11 @@ Parser::Node* Parser::if_stmt()
     temp->left = exp();
     match("THEN");
     temp->right = stmt_seq();
+    if(tokens.at(counter - 1).getType()== "SEMICOLON")
+    {
+        has_error = true;
+        return nullptr;
+    }
     if(tokens.at(counter).getType()=="ELSE")
     {
        match(tokens.at(counter).getType());
@@ -227,7 +232,8 @@ Parser::Node* Parser::stmt_seq()
         match(tokens.at(counter).getType());
         if(counter == tokens.size())
         {
-               return temp;
+               has_error= true;
+               return nullptr;
         }
         Node* next = temp;
         while(next->next != nullptr) {
